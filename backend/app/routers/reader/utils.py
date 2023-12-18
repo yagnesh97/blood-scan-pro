@@ -4,17 +4,41 @@ import pytesseract
 from cv2.typing import MatLike
 
 
-def get_grayscale(image: MatLike):
+def get_grayscale(image: MatLike) -> MatLike:
+    """Get Grayscale Image.
+
+    Args:
+        image (MatLike): Source image.
+
+    Returns:
+        MatLike: Grayscale image.
+    """
     # Convert to grayscale
     return cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
 
-def thresholding(image: MatLike):
+def thresholding(image: MatLike) -> MatLike:
+    """Image Thresholding.
+
+    Args:
+        image (MatLike): Source image.
+
+    Returns:
+        MatLike: Threshold image.
+    """
     # Thresholding
     return cv2.threshold(image, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)[1]
 
 
-def image_to_text(binary_data: bytes):
+def image_to_text(binary_data: bytes) -> str:
+    """Convert Image to Text.
+
+    Args:
+        binary_data (bytes): Source image binary data.
+
+    Returns:
+        str: Text.
+    """
     buffer = np.frombuffer(binary_data, dtype=np.uint8)
     image = cv2.imdecode(buffer, cv2.IMREAD_ANYCOLOR)
     gray = get_grayscale(image)
@@ -34,6 +58,14 @@ def image_to_text(binary_data: bytes):
 
 
 def process_content(content: str) -> str:
+    """Clean and process text content.
+
+    Args:
+        content (str): Unstructure string.
+
+    Returns:
+        str: Unique and structure string.
+    """
     # Split the string into lines
     lines = content.strip().split("\n")
 
