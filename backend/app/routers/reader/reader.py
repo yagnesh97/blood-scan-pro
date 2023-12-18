@@ -27,7 +27,8 @@ async def upload_pdf_file(file: UploadFile) -> ReaderResponse:
             _ = map(lambda page: page.extract_text(), pdf.pages)
             content = process_content(content="\n".join(_))
     elif file.content_type in [MIMETypes.JPEG.value, MIMETypes.PNG.value]:
-        content = image_to_text(binary_data)
+        text = image_to_text(binary_data)
+        content = process_content(content=text)
 
     prompt = f"""
     You are an expert at explaining the blood report.
