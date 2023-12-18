@@ -1,18 +1,11 @@
 import pathlib
 
-try:
-    import tomllib
-except Exception:
-    import toml as tomllib
-
+import tomllib
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 path = pathlib.Path(__file__).parent.absolute()
 with open(f"{path}/../pyproject.toml", mode="rb") as f:
-    try:
-        project_data = tomllib.load(f)
-    except Exception:
-        project_data = tomllib.loads(f.read().decode("utf-8"))
+    project_data = tomllib.load(f)
 
 app_version = project_data["tool"]["poetry"]["version"]
 app_name = project_data["tool"]["poetry"]["name"]

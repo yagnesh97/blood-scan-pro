@@ -1,13 +1,3 @@
-FROM python:3.11-slim-bookworm as requirements-stage
-
-WORKDIR /tmp
-
-RUN pip install poetry
-
-COPY ./backend/pyproject.toml ./backend/poetry.lock* /tmp/
-
-RUN poetry export -f requirements.txt --output requirements.txt --without-hashes
-
 FROM python:3.11-slim-bookworm
 
 RUN apt-get update \
@@ -18,11 +8,11 @@ RUN apt-get autoremove -y \
     && apt-get clean -y \
     && apt-get autoclean -y
 
-COPY --from=requirements-stage /tmp/requirements.txt /requirements.txt
+WORKDIR /home
 
-COPY ./backend/pyproject.toml ./backend/gunicorn_conf.py /
+COPY ./backend/pyproject.toml ./backend/gunicorn_conf.py ./backend/requirements.txt ./
 
-COPY ./backend/app /app
+COPY ./backend/app ./app
 
 RUN pip install --no-cache-dir --upgrade -r requirements.txt
 
