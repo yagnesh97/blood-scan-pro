@@ -12,7 +12,7 @@ with open(f"{path}/../pyproject.toml", mode="rb") as f:
     try:
         project_data = tomllib.load(f)
     except Exception:
-        project_data = tomllib.load("".join(f.readlines()))
+        project_data = tomllib.loads(f.read().decode("utf-8"))
 
 app_version = project_data["tool"]["poetry"]["version"]
 app_name = project_data["tool"]["poetry"]["name"]
