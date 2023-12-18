@@ -1,0 +1,70 @@
+[tool.poetry]
+name = "blood-scan-pro"
+version = "0.1.0"
+description = "Backend service for Blood Scan Pro app."
+authors = ["Yagnesh Vakharia <yagneshvakharia97@gmail.com>"]
+license = "MIT License"
+readme = "README.md"
+packages = []
+
+[tool.metadata]
+title = "Blood Scan Pro"
+full_description = """
+Blood Scan Pro
+
+📝 [Source Code](https://github.com/yagnesh97/blood-scan-pro)
+🐞 [Issues](https://github.com/yagnesh97/blood-scan-pro/issues)
+"""
+
+[tool.poetry.dependencies]
+python = "^3.11"
+google-generativeai = "^0.2.2"
+fastapi = "^0.104.1"
+uvicorn = { extras = ["standard"], version = "^0.24.0.post1" }
+pydantic-settings = "^2.1.0"
+gunicorn = "^21.2.0"
+python-multipart = "^0.0.6"
+pdfplumber = "^0.10.3"
+numpy = "^1.26.2"
+pytesseract = "^0.3.10"
+opencv-python = "^4.8.1.78"
+
+[tool.poetry.group.dev.dependencies]
+mypy = "^1.7.0"
+ruff = "^0.1.6"
+pytest = "^7.4.3"
+coverage = "^7.3.2"
+httpx = "^0.25.1"
+
+[tool.ruff]
+select = ["E", "F", "I"]
+fixable = ["ALL"]
+exclude = [".git", ".mypy_cache", ".ruff_cache"]
+line-length = 88
+
+[tool.mypy]
+disallow_any_generics = true
+disallow_subclassing_any = true
+disallow_untyped_calls = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+check_untyped_defs = true
+no_implicit_optional = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_return_any = true
+strict_equality = true
+disallow_untyped_decorators = false
+ignore_missing_imports = true
+implicit_reexport = true
+plugins = "pydantic.mypy"
+
+[tool.pydantic-mypy]
+init_forbid_extra = true
+init_typed = true
+warn_required_dynamic_aliases = true
+warn_untyped_fields = true
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
