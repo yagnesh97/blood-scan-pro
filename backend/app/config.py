@@ -1,6 +1,9 @@
 import pathlib
 
-import tomllib
+try:
+    import tomllib
+except Exception:
+    import toml as tomllib
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 path = pathlib.Path(__file__).parent.absolute()
