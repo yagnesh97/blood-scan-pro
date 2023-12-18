@@ -1,12 +1,13 @@
+import google.generativeai as palm
 import pdfplumber
 from fastapi import APIRouter, HTTPException, UploadFile, status
 from fastapi.security import HTTPBearer
 
+from app.config import settings
+
 from .enums import MIMETypes
 from .models import ReaderResponse
 from .utils import image_to_text, process_content
-from app.config import settings
-import google.generativeai as palm
 
 router = APIRouter()
 security = HTTPBearer()
