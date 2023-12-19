@@ -5,12 +5,19 @@ services:
     container_name: api
     build:
       dockerfile: Dockerfile
-    ports:
-      - 8000:80
+    expose:
+      - 8000
     env_file:
       - ./backend/.env
-    networks:
-      - apinet
+    restart: always
 
-networks:
-  apinet:
+  nginx:
+    container_name: nginx
+    image: nginx:1.25.3-bookworm
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    ports:
+      - 80:80
+    depends_on:
+      - api
+    restart: always
