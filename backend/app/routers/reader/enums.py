@@ -14,3 +14,11 @@ class MIMETypes(str, Enum):
             list[str]: List of MIME types.
         """
         return list(map(lambda _: _.value, MIMETypes))
+
+
+class SignalCodes(str, Enum):
+    CLOSE_NORMAL = 1000
+
+
+class Signals(str, Enum):
+    CLOSE_NORMAL = "CLOSE_NORMAL"

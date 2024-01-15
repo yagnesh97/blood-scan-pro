@@ -1,9 +1,11 @@
+import secrets
 import time
 from typing import Any, Callable, TypeVar
 
 import uvicorn
 from fastapi import FastAPI, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
+from starlette.middleware.sessions import SessionMiddleware
 
 from app.config import app_description, app_title, app_version, settings
 from app.routers.reader import reader
@@ -26,6 +28,7 @@ app.add_middleware(
         "http://localhost:3000",
     ],
 )
+app.add_middleware(SessionMiddleware, secret_key=secrets.token_hex(16))
 
 F = TypeVar("F", bound=Callable[..., Any])
 
@@ -59,7 +62,7 @@ app.include_router(
 
 app.include_router(
     reader.router,
-    prefix="/v1/reader",
+    prefix="/socket",
     tags=["reader"],
 )
 

@@ -1,90 +1,25 @@
-import cv2
-import numpy as np
-import pytesseract
-from cv2.typing import MatLike
+from typing import Any, AsyncGenerator
+
+import google.generativeai as genai
+
+from app.config import settings
 
 
-def get_grayscale(image: MatLike) -> MatLike:
-    """Get Grayscale Image.
-
-    Args:
-        image (MatLike): Source image.
-
-    Returns:
-        MatLike: Grayscale image.
-    """
-    # Convert to grayscale
-    return cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-
-
-def thresholding(image: MatLike) -> MatLike:
-    """Image Thresholding.
+async def get_ai_response(contents: list[Any]) -> AsyncGenerator[str, None]:
+    """Gemini AI Response
 
     Args:
-        image (MatLike): Source image.
+        contents (list[Any]): String and image contents.
 
     Returns:
-        MatLike: Threshold image.
+        AsyncGenerator[str, None]: Generator function.
+
+    Yields:
+        Iterator[AsyncGenerator[str, None]]: Gemini AI Response.
     """
-    # Thresholding
-    return cv2.threshold(image, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)[1]
+    genai.configure(api_key=settings.genai_key)
+    model = genai.GenerativeModel(model_name=settings.genai_model_vision)
+    result = model.generate_content(contents=contents, stream=True)
 
-
-def image_to_text(binary_data: bytes) -> str:
-    """Convert Image to Text.
-
-    Args:
-        binary_data (bytes): Source image binary data.
-
-    Returns:
-        str: Text.
-    """
-    buffer = np.frombuffer(binary_data, dtype=np.uint8)
-    image = cv2.imdecode(buffer, cv2.IMREAD_ANYCOLOR)
-    gray = get_grayscale(image)
-    thresh = thresholding(gray)
-
-    # Noise removal
-    kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (3, 3))
-    opening = cv2.morphologyEx(thresh, cv2.MORPH_OPEN, kernel, iterations=2)
-
-    # Contrast enhancement
-    contrast = cv2.equalizeHist(opening)
-
-    # Adding custom options
-    custom_config = r"--oem 3 --psm 3"
-    text = pytesseract.image_to_string(contrast, config=custom_config)
-    return text
-
-
-def process_content(content: str) -> str:
-    """Clean and process text content.
-
-    Args:
-        content (str): Unstructure string.
-
-    Returns:
-        str: Unique and structure string.
-    """
-    # Split the string into lines
-    lines = content.strip().split("\n")
-
-    # Convert the lines to a NumPy array
-    lines_array = np.array(lines)
-
-    # Keep only elements with length greater than 1
-    lines_array = lines_array[np.char.str_len(lines_array) > 1]
-
-    # Get unique elements and their indices
-    unique_lines, indices = np.unique(lines_array, return_index=True)
-
-    # Sort indices to maintain the original order
-    sorted_indices = np.argsort(indices)
-
-    # Sort unique lines based on the sorted indices
-    sorted_unique_lines = unique_lines[sorted_indices]
-
-    # Join the sorted unique lines
-    processed_content = "\n".join(sorted_unique_lines)
-
-    return processed_content
+    for chunk in result:
+        yield chunk.text

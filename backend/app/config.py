@@ -17,8 +17,9 @@ class Settings(BaseSettings):
     environment: str = "production"
     logging_level: str = "INFO"
     root_path: str = ""
-    palm_key: str
-    palm_model: str = "models/text-bison-001"
+    genai_key: str
+    genai_model_text: str = "models/gemini-pro"
+    genai_model_vision: str = "models/gemini-pro-vision"
 
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 

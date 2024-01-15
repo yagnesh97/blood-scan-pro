@@ -8,3 +8,8 @@ class ReaderResponse(BaseModel):
     content_type: MIMETypes
     size: int
     content: str | None
+
+
+class WebsocketResponse(BaseModel):
+    status: bool
+    message: str
